@@ -17,18 +17,15 @@
 package com.google.zxing.client.android.camera;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import com.google.zxing.client.android.PlanarYUVLuminanceSource;
-import com.google.zxing.client.android.PreferencesActivity;
 
 import java.io.IOException;
 
@@ -62,7 +59,6 @@ public final class CameraManager {
     SDK_INT = sdkInt;
   }
 
-  private final Context context;
   private final CameraConfigurationManager configManager;
   private Camera camera;
   private Rect framingRect;
@@ -102,7 +98,6 @@ public final class CameraManager {
 
   private CameraManager(Context context) {
 
-    this.context = context;
     this.configManager = new CameraConfigurationManager(context);
 
     // Camera.setOneShotPreviewCallback() has a race condition in Cupcake, so we use the older
@@ -134,12 +129,6 @@ public final class CameraManager {
       configManager.initFromCameraParameters(camera);
     }
     configManager.setDesiredCameraParameters(camera);
-
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-    reverseImage = prefs.getBoolean(PreferencesActivity.KEY_REVERSE_IMAGE, false);
-    if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
-      FlashlightManager.enableFlashlight();
-    }
   }
 
   /**
@@ -147,7 +136,6 @@ public final class CameraManager {
    */
   public void closeDriver() {
     if (camera != null) {
-      FlashlightManager.disableFlashlight();
       camera.release();
       camera = null;
 

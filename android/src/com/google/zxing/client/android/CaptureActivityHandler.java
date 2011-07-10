@@ -23,7 +23,6 @@ import com.google.zxing.client.android.camera.CameraManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -95,13 +94,6 @@ public final class CaptureActivityHandler extends Handler {
         Log.d(TAG, "Got return scan result message");
         activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
         activity.finish();
-        break;
-      case R.id.launch_product_query:
-        Log.d(TAG, "Got product query message");
-        String url = (String) message.obj;
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        activity.startActivity(intent);
         break;
     }
   }
